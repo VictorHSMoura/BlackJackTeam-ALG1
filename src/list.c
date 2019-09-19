@@ -14,7 +14,7 @@ int is_list_empty(list *l) {
 void add_item_start(list *l, int item) {
     cell *new_cell;
     new_cell = (cell *) malloc(sizeof(cell));
-    l->start->age = item;
+    l->start->item = item;
     new_cell->next = l->start;
     l->start = new_cell;
 }
@@ -22,7 +22,7 @@ void add_item_start(list *l, int item) {
 void add_item_end(list *l, int item) {
     l->end->next = (cell *) malloc(sizeof(cell));
     l->end = l->end->next;
-    l->end->age = item;
+    l->end->item = item;
     l->end->next = NULL;
 }
 
@@ -34,6 +34,31 @@ int remove_item_start(list *l) {
     l->start = l->start->next;
     free(p);
     return 1;
+}
+
+//returns the pointer to 1 cell before the item
+//if it don't exists, returns NULL
+cell *find(list *l, int item) {
+    cell *p = l->start;
+    while (p->next != NULL) {
+        if (p->next->item == item)
+            return p;
+        p = p->next;
+    }
+    return NULL;
+}
+
+void remove_by_item(list *l, int item){
+    cell *p_before = find(l, item);
+    
+    if (p_before != NULL) {
+        cell *p = p_before->next;
+        if (p == l->end)
+            l->end = p_before;
+            
+        p_before->next = p->next;
+        free(p);
+    }
 }
 
 void free_list(list *l) {
