@@ -1,5 +1,6 @@
 #include "../include/list.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 void make_empty_list(list *l) {
     l->start = (cell *) malloc(sizeof(cell));
@@ -59,6 +60,16 @@ void remove_by_item(list *l, int item){
         p_before->next = p->next;
         free(p);
     }
+}
+
+void print_list(list *l) {
+    cell *p = l->start->next;
+
+    while (p != NULL) {
+        printf("%d ", p->item + 1);
+        p = p->next;
+    }
+    printf("\n");
 }
 
 void free_list(list *l) {

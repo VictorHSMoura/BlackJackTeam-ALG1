@@ -3,5 +3,6 @@
 
 Suite *list_suite();
 Suite *team_suite();
+Suite *functions_suite();
 
 #endif /* CHECK_CHECK_H */

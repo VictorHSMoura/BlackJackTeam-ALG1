@@ -20,6 +20,7 @@ int remove_item_start(list *l);
 int remove_item_end(list *l);
 cell *find(list *l, int item);
 void remove_by_item(list *l, int item);
+void print_list(list *l);
 void free_list(list *l);
 
 #endif

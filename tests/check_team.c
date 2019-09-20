@@ -27,6 +27,10 @@ START_TEST (test_insert_edge) {
     ck_assert_int_eq(0, is_list_empty(&t.adjacency[4]));
 } END_TEST
 
+void end_team() {
+    free_team(&t);
+}
+
 Suite *team_suite() {
     Suite *s;
     TCase *tc_core;
@@ -36,7 +40,7 @@ Suite *team_suite() {
     /*Core test case*/
     tc_core = tcase_create("Core");
 
-    tcase_add_checked_fixture(tc_core, setup, NULL);
+    tcase_add_checked_fixture(tc_core, setup, end_team);
     tcase_add_test(tc_core, test_set_age);
     tcase_add_test(tc_core, test_insert_edge);
     suite_add_tcase(s, tc_core);

@@ -3,7 +3,7 @@
 
 #include "team.h"
 
-void meeting(team *t);
-void topological_order(team *t, int *visited, int node);
+list meeting(team *t);
+void topological_order(team *t, int *visited, int node, list *l);
 
 #endif

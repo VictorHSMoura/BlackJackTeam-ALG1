@@ -63,6 +63,10 @@ START_TEST (test_list_remove_by_item) {
     ck_assert_ptr_eq(NULL, find(&l, 3));
 } END_TEST
 
+void end_list(){
+    free_list(&l);
+}
+
 Suite *list_suite() {
     Suite *s;
     TCase *tc_core;
@@ -72,7 +76,7 @@ Suite *list_suite() {
     /*Core test case*/
     tc_core = tcase_create("Core");
 
-    tcase_add_checked_fixture(tc_core, setup_list, NULL);
+    tcase_add_checked_fixture(tc_core, setup_list, end_list);
     tcase_add_test(tc_core, test_list_creation);
     tcase_add_test(tc_core, test_add_item_start);
     tcase_add_test(tc_core, test_add_item_end);

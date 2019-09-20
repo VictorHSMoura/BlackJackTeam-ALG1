@@ -9,6 +9,7 @@ int main(){
 
     sr = srunner_create(list_suite());
     srunner_add_suite(sr, team_suite());
+    srunner_add_suite(sr, functions_suite());
 
     srunner_run_all(sr, CK_FAILURE);
     number_failed = srunner_ntests_failed(sr);
