@@ -16,10 +16,11 @@ void make_empty_list(list *l);
 int is_list_empty(list *l);
 void add_item_start(list *l, int item);
 void add_item_end(list *l, int item);
+void add_item_by_pointer(list *l, cell *item_before, int item);
+cell *find(list *l, int item);
 int remove_item_start(list *l);
 int remove_item_end(list *l);
-cell *find(list *l, int item);
-void remove_by_item(list *l, int item);
+void remove_by_pointer(list *l, cell *item_before);
 void print_list(list *l);
 void free_list(list *l);
 

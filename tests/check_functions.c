@@ -30,6 +30,27 @@ START_TEST (test_meeting) {
     }
 } END_TEST
 
+START_TEST (test_verify_cycle) {
+    ck_assert_int_eq(0, verify_cycle(&t));
+
+    insert_edge(&t, 6, 3); //7 4
+    ck_assert_int_eq(1, verify_cycle(&t));
+} END_TEST
+
+START_TEST (test_swap) {
+    ck_assert_int_eq(1, swap(&t, 5, 2)); // swap com sucesso
+    ck_assert_ptr_eq(NULL, find(&t.adjacency[5], 2));
+    ck_assert_ptr_ne(NULL, find(&t.adjacency[2], 5));
+
+    ck_assert_int_eq(0, swap(&t, 3, 1)); // swap entre nós que não tem aresta
+    
+    ck_assert_int_eq(0, swap(&t, 3, 6)); // swap entre nós que geram ciclo
+    ck_assert_ptr_eq(NULL, find(&t.adjacency[6], 3));
+    ck_assert_ptr_ne(NULL, find(&t.adjacency[3], 6));
+} END_TEST
+
+
+
 void end_functions() {
     free_team(&t);
 }
@@ -45,6 +66,8 @@ Suite *functions_suite() {
 
     tcase_add_checked_fixture(tc_core, setup_functions, end_functions);
     tcase_add_test(tc_core, test_meeting);
+    tcase_add_test(tc_core, test_verify_cycle);
+    tcase_add_test(tc_core, test_swap);
     suite_add_tcase(s, tc_core);
 
     return s;

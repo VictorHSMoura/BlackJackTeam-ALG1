@@ -27,6 +27,16 @@ void add_item_end(list *l, int item) {
     l->end->next = NULL;
 }
 
+void add_item_by_pointer(list *l, cell *item_before, int item) {
+    cell *new_item = (cell *) malloc(sizeof(cell));
+    new_item->item = item;
+    new_item->next = item_before->next;
+    item_before->next = new_item;
+
+    if(item_before == l->end)
+        l->end = new_item;
+}
+
 int remove_item_start(list *l) {
     if (is_list_empty(l))
         return 0;
@@ -34,6 +44,22 @@ int remove_item_start(list *l) {
     cell *p = l->start;
     l->start = l->start->next;
     free(p);
+    return 1;
+}
+
+int remove_item_end(list *l) {
+    if (is_list_empty(l))
+        return 0;
+
+    cell *p = l->start;
+    while(p->next != l->end){
+        p = p->next;
+    }
+    l->end = p;
+    p = p->next;
+    free(p);
+    l->end->next = NULL;
+    
     return 1;
 }
 
@@ -49,16 +75,14 @@ cell *find(list *l, int item) {
     return NULL;
 }
 
-void remove_by_item(list *l, int item){
-    cell *p_before = find(l, item);
-    
-    if (p_before != NULL) {
-        cell *p = p_before->next;
-        if (p == l->end)
-            l->end = p_before;
+void remove_by_pointer(list *l, cell *item_before){  
+    if (item_before != NULL) {
+        cell *item = item_before->next;
+        if (item == l->end)
+            l->end = item_before;
             
-        p_before->next = p->next;
-        free(p);
+        item_before->next = item->next;
+        free(item);
     }
 }
 

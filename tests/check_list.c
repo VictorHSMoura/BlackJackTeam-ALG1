@@ -38,6 +38,18 @@ START_TEST (test_remove_item_start) {
     ck_assert_int_eq(0, remove_item_start(&l)); // not possible. Empty list
 } END_TEST
 
+START_TEST (test_remove_item_end) {
+    add_item_start(&l, 4);
+    add_item_start(&l, 7);
+    add_item_start(&l, 9);
+    ck_assert_int_eq(1, remove_item_end(&l));
+    ck_assert_int_eq(7, l.end->item);
+    ck_assert_int_eq(1, remove_item_end(&l));
+    ck_assert_int_eq(9, l.end->item);
+    ck_assert_int_eq(1, remove_item_end(&l));
+    ck_assert_int_eq(0, remove_item_end(&l)); // not possible. Empty list
+} END_TEST
+
 START_TEST (test_list_empty) {
     ck_assert_int_eq(1, is_list_empty(&l));
 
@@ -54,13 +66,28 @@ START_TEST (test_list_find) {
     ck_assert_ptr_eq(NULL, find(&l, 6));
 } END_TEST
 
-START_TEST (test_list_remove_by_item) {
+START_TEST (test_list_remove_by_pointer) {
     for (int i = 1; i <= 5; i++)
         add_item_end(&l, i);
     
-    ck_assert_ptr_ne(NULL, find(&l, 3));
-    remove_by_item(&l, 3);
+    cell *item3 = find(&l, 3);
+    ck_assert_ptr_ne(NULL, item3);
+    remove_by_pointer(&l, item3);
     ck_assert_ptr_eq(NULL, find(&l, 3));
+} END_TEST
+
+START_TEST (test_add_item_by_pointer) {
+    for (int i = 1; i <= 5; i++)
+        add_item_end(&l, i);
+
+    cell *item_before_3 = find(&l, 3);
+    add_item_by_pointer(&l, item_before_3, 9);
+
+    cell *p = l.start->next;
+    int items[6] = {1, 2, 9, 3, 4, 5};
+    for(int i = 0; i < 6; i++, p = p->next){
+        ck_assert_int_eq(items[i], p->item);
+    }
 } END_TEST
 
 void end_list(){
@@ -81,9 +108,11 @@ Suite *list_suite() {
     tcase_add_test(tc_core, test_add_item_start);
     tcase_add_test(tc_core, test_add_item_end);
     tcase_add_test(tc_core, test_remove_item_start);
+    tcase_add_test(tc_core, test_remove_item_end);
     tcase_add_test(tc_core, test_list_empty);
     tcase_add_test(tc_core, test_list_find);
-    tcase_add_test(tc_core, test_list_remove_by_item);
+    tcase_add_test(tc_core, test_list_remove_by_pointer);
+    tcase_add_test(tc_core, test_add_item_by_pointer);
     suite_add_tcase(s, tc_core);
 
     return s;
