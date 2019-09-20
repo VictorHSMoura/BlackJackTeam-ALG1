@@ -1,4 +1,5 @@
 #include <check.h>
+#include <stdlib.h>
 #include "check_check.h"
 #include "../include/functions.h"
 
@@ -38,18 +39,42 @@ START_TEST (test_verify_cycle) {
 } END_TEST
 
 START_TEST (test_swap) {
-    ck_assert_int_eq(1, swap(&t, 5, 2)); // swap com sucesso
+    ck_assert_int_eq(1, swap(&t, 5, 2)); // valid swap
     ck_assert_ptr_eq(NULL, find(&t.adjacency[5], 2));
     ck_assert_ptr_ne(NULL, find(&t.adjacency[2], 5));
 
-    ck_assert_int_eq(0, swap(&t, 3, 1)); // swap entre nós que não tem aresta
+    ck_assert_int_eq(0, swap(&t, 3, 1)); // swap between nodes without an edge
     
-    ck_assert_int_eq(0, swap(&t, 3, 6)); // swap entre nós que geram ciclo
+    ck_assert_int_eq(0, swap(&t, 3, 6)); // swap that generates a cycle
+    ck_assert_int_eq(0, swap(&t, 3, 6)); // checking in both directions
     ck_assert_ptr_eq(NULL, find(&t.adjacency[6], 3));
     ck_assert_ptr_ne(NULL, find(&t.adjacency[3], 6));
 } END_TEST
 
+START_TEST (test_invert_edges) {
+    team inverted_team = invert_edges(&t);
 
+    for(int i = 0; i < N; i++) {
+        cell *p = t.adjacency[i].start->next;
+        while (p != NULL) {
+            //check if exists a node from the dest to the src on the inverted team
+            ck_assert_ptr_ne(NULL, find(&inverted_team.adjacency[p->item], i));
+            p = p->next;
+        }
+    }
+    free_team(&inverted_team);
+} END_TEST
+
+START_TEST (test_get_younger) {
+    int *visited = (int *) calloc(t.size, sizeof(int));
+    ck_assert_int_eq(33, get_younger(&t, 0, visited, INFINITY));
+    ck_assert_int_eq(26, get_younger(&t, 6, visited, INFINITY));
+} END_TEST
+
+START_TEST (test_commander) {
+    ck_assert_int_eq(18, commander(&t, 2));
+    ck_assert_int_eq(-1, commander(&t, 3));
+} END_TEST
 
 void end_functions() {
     free_team(&t);
@@ -68,6 +93,9 @@ Suite *functions_suite() {
     tcase_add_test(tc_core, test_meeting);
     tcase_add_test(tc_core, test_verify_cycle);
     tcase_add_test(tc_core, test_swap);
+    tcase_add_test(tc_core, test_invert_edges);
+    tcase_add_test(tc_core, test_get_younger);
+    tcase_add_test(tc_core, test_commander);
     suite_add_tcase(s, tc_core);
 
     return s;

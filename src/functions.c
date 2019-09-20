@@ -30,6 +30,11 @@ void topological_order(team *t, int *visited, int node, list *l) {
 int swap(team *t, int src, int dest) {
     cell *edge = find(&t->adjacency[src], dest);
 
+    if (edge == NULL) { 
+        int aux;
+        aux = src; src = dest; dest = aux;
+        edge = find(&t->adjacency[src], dest);
+    }
     if (edge != NULL) {
         remove_by_pointer(&t->adjacency[src], edge);
         add_item_end(&t->adjacency[dest], src);
@@ -69,4 +74,48 @@ int dfs_cycle(team *t, int *visited, int node) {
     }
     visited[node] = 2;
     return 0;
+}
+
+team invert_edges(team *t) {
+    team inverted_team;
+    make_empty_team(&inverted_team, t->size);
+
+    for(int i = 0; i < t->size; i++) {
+        list edges = t->adjacency[i];
+        for (cell *p = edges.start->next; p != NULL; p = p->next) {
+            insert_edge(&inverted_team, p->item, i);
+        }
+        set_age(&inverted_team, i, t->ages[i]);
+    }
+    return inverted_team;
+}
+
+int commander(team *t, int node) {
+    team inverted_team = invert_edges(t);
+    int *visited = (int *) calloc(t->size, sizeof(int));
+    int younger = get_younger(&inverted_team, node, visited, INFINITY);
+    if(younger == inverted_team.ages[node])
+        return -1;
+    else
+        return younger;
+}
+
+//returns node age if it doesn't have a commander
+int get_younger(team *t, int node, int *visited, int minAge) {
+    cell *p = t->adjacency[node].start->next;
+    int younger = minAge;
+    
+    visited[node] = 1;
+    if (p == NULL)
+        return t->ages[node] < minAge? t->ages[node]: minAge;
+    
+    while (p != NULL) {
+        if(visited[p->item] == 0){
+            int new_age = get_younger(t, p->item, visited, t->ages[p->item]);
+            if(new_age < younger)
+                younger = new_age;
+        }
+        p = p->next;
+    }
+    return younger;
 }
