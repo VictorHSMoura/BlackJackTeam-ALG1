@@ -19,12 +19,12 @@ START_TEST (test_set_age) {
 } END_TEST
 
 START_TEST (test_insert_edge) {
-    insert_edge(&t, 0, 2);
+    insert_edge(&t, 1, 2);
     ck_assert_int_eq(0, is_list_empty(&t.adjacency[0]));
     
-    ck_assert_int_eq(1, is_list_empty(&t.adjacency[4]));
+    ck_assert_int_eq(1, is_list_empty(&t.adjacency[3]));
     insert_edge(&t, 4, 6);
-    ck_assert_int_eq(0, is_list_empty(&t.adjacency[4]));
+    ck_assert_int_eq(0, is_list_empty(&t.adjacency[3]));
 } END_TEST
 
 void end_team() {

@@ -18,7 +18,7 @@ void setup_functions(){
         set_age(&t, i, ages[i]);
 
     for(int i = 0; i < M; i++)
-        insert_edge(&t, src[i]-1, dest[i]-1);
+        insert_edge(&t, src[i], dest[i]);
 }
 
 START_TEST (test_meeting) {
@@ -27,26 +27,26 @@ START_TEST (test_meeting) {
     cell *p = l.start->next;
 
     for(int i = 0; i < N; i++, p = p->next){
-        ck_assert_int_eq(desired[i], p->item + 1);
+        ck_assert_int_eq(desired[i], p->item);
     }
 } END_TEST
 
 START_TEST (test_verify_cycle) {
     ck_assert_int_eq(0, verify_cycle(&t));
 
-    insert_edge(&t, 6, 3); //7 4
+    insert_edge(&t, 7, 4);
     ck_assert_int_eq(1, verify_cycle(&t));
 } END_TEST
 
 START_TEST (test_swap) {
-    ck_assert_int_eq(1, swap(&t, 5, 2)); // valid swap
+    ck_assert_int_eq(1, swap(&t, 6, 3)); // valid swap
     ck_assert_ptr_eq(NULL, find(&t.adjacency[5], 2));
     ck_assert_ptr_ne(NULL, find(&t.adjacency[2], 5));
 
-    ck_assert_int_eq(0, swap(&t, 3, 1)); // swap between nodes without an edge
+    ck_assert_int_eq(0, swap(&t, 4, 2)); // swap between nodes without an edge
     
-    ck_assert_int_eq(0, swap(&t, 3, 6)); // swap that generates a cycle
-    ck_assert_int_eq(0, swap(&t, 3, 6)); // checking in both directions
+    ck_assert_int_eq(0, swap(&t, 4, 7)); // swap that generates a cycle
+    ck_assert_int_eq(0, swap(&t, 7, 4)); // checking in both directions
     ck_assert_ptr_eq(NULL, find(&t.adjacency[6], 3));
     ck_assert_ptr_ne(NULL, find(&t.adjacency[3], 6));
 } END_TEST
@@ -84,7 +84,7 @@ Suite *functions_suite() {
     Suite *s;
     TCase *tc_core;
 
-    s = suite_create("Team");
+    s = suite_create("Functions");
 
     /*Core test case*/
     tc_core = tcase_create("Core");

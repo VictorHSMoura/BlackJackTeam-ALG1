@@ -90,7 +90,7 @@ void print_list(list *l) {
     cell *p = l->start->next;
 
     while (p != NULL) {
-        printf("%d ", p->item + 1);
+        printf("%d ", p->item);
         p = p->next;
     }
     printf("\n");

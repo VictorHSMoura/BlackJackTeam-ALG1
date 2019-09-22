@@ -14,7 +14,7 @@ void set_age(team *t, int position, int age) {
 }
 
 void insert_edge(team *t, int source, int dest) {
-    add_item_end(&t->adjacency[source], dest);
+    add_item_end(&t->adjacency[source - OFFSET], dest - OFFSET);
 }
 
 void free_team(team *t) {

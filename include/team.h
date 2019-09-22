@@ -2,6 +2,7 @@
 #define TEAM_H
 
 #include "list.h"
+#define OFFSET 1
 
 typedef struct {
     int *ages;

@@ -24,10 +24,12 @@ void topological_order(team *t, int *visited, int node, list *l) {
             topological_order(t, visited, p->item, l);
         p = p->next;
     }
-    add_item_start(l, node);
+    add_item_start(l, node + OFFSET);
 }
 
 int swap(team *t, int src, int dest) {
+    src = src - OFFSET;
+    dest = dest - OFFSET;
     cell *edge = find(&t->adjacency[src], dest);
 
     if (edge == NULL) { 
@@ -83,7 +85,7 @@ team invert_edges(team *t) {
     for(int i = 0; i < t->size; i++) {
         list edges = t->adjacency[i];
         for (cell *p = edges.start->next; p != NULL; p = p->next) {
-            insert_edge(&inverted_team, p->item, i);
+            insert_edge(&inverted_team, p->item + OFFSET, i + OFFSET);
         }
         set_age(&inverted_team, i, t->ages[i]);
     }
