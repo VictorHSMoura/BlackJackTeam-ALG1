@@ -9,7 +9,7 @@ list meeting(team *t) {
     
     make_empty_list(&l);
     for(int i = 0; i < t->size; i++){
-        if(visited[i] == 0)
+        if(visited[i] == WHITE)
             topological_order(t, visited, i, &l);
     }
     return l;
@@ -17,14 +17,15 @@ list meeting(team *t) {
 
 void topological_order(team *t, int *visited, int node, list *l) {
     cell *p = t->adjacency[node].start->next;
-    visited[node] = 1;
+    visited[node] = GRAY;
     
     while(p != NULL) {
-        if(visited[p->item] == 0)
+        if(visited[p->item] == WHITE)
             topological_order(t, visited, p->item, l);
         p = p->next;
     }
     add_item_start(l, node + OFFSET);
+    visited[node] = BLACK;
 }
 
 int swap(team *t, int src, int dest) {
@@ -56,7 +57,7 @@ int verify_cycle(team *t) {
     int *visited = (int *) calloc(t->size, sizeof(int));
 
     for(int i = 0; i < t->size; i++) {
-        if(visited[i] == 0)
+        if(visited[i] == WHITE)
             if(dfs_cycle(t, visited, i))
                 return 1;
     }
@@ -65,16 +66,16 @@ int verify_cycle(team *t) {
 
 int dfs_cycle(team *t, int *visited, int node) {
     cell *p = t->adjacency[node].start->next;
-    visited[node] = 1;
+    visited[node] = GRAY;
 
     while (p != NULL) {
-        if(visited[p->item] == 1)
+        if(visited[p->item] == GRAY)
             return 1;
         else if(dfs_cycle(t, visited, p->item))
             return 1;
         p = p->next;
     }
-    visited[node] = 2;
+    visited[node] = BLACK;
     return 0;
 }
 
@@ -95,29 +96,31 @@ team invert_edges(team *t) {
 int commander(team *t, int node) {
     team inverted_team = invert_edges(t);
     int *visited = (int *) calloc(t->size, sizeof(int));
-    int younger = get_younger(&inverted_team, node, visited, INFINITY);
-    if(younger == inverted_team.ages[node])
+    int younger = get_youngest(&inverted_team, node, visited, __INT_MAX__, 1);
+    if(younger == __INT_MAX__)
         return -1;
     else
         return younger;
 }
 
-//returns node age if it doesn't have a commander
-int get_younger(team *t, int node, int *visited, int minAge) {
+//returns infinity if it doesn't have a commander
+int get_youngest(team *t, int node, int *visited, int youngest, int original) {
     cell *p = t->adjacency[node].start->next;
-    int younger = minAge;
+    int new_youngest;
+    visited[node] = GRAY;
     
-    visited[node] = 1;
-    if (p == NULL)
-        return t->ages[node] < minAge? t->ages[node]: minAge;
-    
+    if(!original)
+        youngest = t->ages[node] < youngest ? t->ages[node] : youngest;
+    else
+        original = 0;
+   
     while (p != NULL) {
-        if(visited[p->item] == 0){
-            int new_age = get_younger(t, p->item, visited, t->ages[p->item]);
-            if(new_age < younger)
-                younger = new_age;
+        if(visited[p->item] == WHITE) {
+            new_youngest = get_youngest(t, p->item, visited, youngest, original);
+            if(new_youngest < youngest)
+                youngest = new_youngest;
         }
         p = p->next;
     }
-    return younger;
+    return youngest;
 }

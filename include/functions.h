@@ -3,7 +3,9 @@
 
 #include "team.h"
 
-#define INFINITY 2147483647
+#define WHITE 0
+#define GRAY 1
+#define BLACK 2
 
 list meeting(team *t);
 void topological_order(team *t, int *visited, int node, list *l);
@@ -12,6 +14,6 @@ int verify_cycle(team *t);
 int dfs_cycle(team *t, int *visited, int node);
 team invert_edges(team *t);
 int commander(team *t, int node);
-int get_younger(team *t, int node, int *visited,int minAge);
+int get_youngest(team *t, int node, int *visited, int youngest, int original);
 
 #endif

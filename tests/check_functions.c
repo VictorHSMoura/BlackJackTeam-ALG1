@@ -65,10 +65,10 @@ START_TEST (test_invert_edges) {
     free_team(&inverted_team);
 } END_TEST
 
-START_TEST (test_get_younger) {
+START_TEST (test_get_youngest) {
     int *visited = (int *) calloc(t.size, sizeof(int));
-    ck_assert_int_eq(33, get_younger(&t, 0, visited, INFINITY));
-    ck_assert_int_eq(26, get_younger(&t, 6, visited, INFINITY));
+    ck_assert_int_eq(33, get_youngest(&t, 0, visited, __INT_MAX__, 1));
+    ck_assert_int_eq(__INT_MAX__, get_youngest(&t, 6, visited, __INT_MAX__, 1));
 } END_TEST
 
 START_TEST (test_commander) {
@@ -94,7 +94,7 @@ Suite *functions_suite() {
     tcase_add_test(tc_core, test_verify_cycle);
     tcase_add_test(tc_core, test_swap);
     tcase_add_test(tc_core, test_invert_edges);
-    tcase_add_test(tc_core, test_get_younger);
+    tcase_add_test(tc_core, test_get_youngest);
     tcase_add_test(tc_core, test_commander);
     suite_add_tcase(s, tc_core);
 

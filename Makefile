@@ -12,17 +12,20 @@ OBJECTS_TEST := $(patsubst $(SRCDIR)/%.cpp $(TSTDIR)/%.cpp, $(OBJDIR)/%.o, $(TES
 OBJECTS := $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCE:.c=.o))
 
 main: main_make clean_src
-tests: tests_make clean_src clean_tst
+tests: tests_make clean_src clean_tst tests_run
 
 
 tests_make: $(OBJECTS_TEST)
 	@mkdir -p $(@D)
 	@$(CC) -o test $(OBJECTS_TEST) $(FLAGS)
-	./test
+	
 
 main_make: $(OBJECTS)
 	@mkdir -p $(@D)
-	@$(CC) -o tp1 $(OBJECTS) $(FLAGS)
+	@$(CC) -o tp1 $(OBJECTS)
+
+tests_run:
+	./test
 
 clean_src:
 	@rm $(SRCDIR)/*.o
