@@ -3,6 +3,10 @@ test
 tp1
 .vscode/
 
+# Tests
+test_values/
+dataset/generator_tests
+
 # Prerequisites
 *.d
 

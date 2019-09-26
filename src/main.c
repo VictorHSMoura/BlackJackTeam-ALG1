@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 
 int main(int argc, char const *argv[]) {
@@ -10,11 +11,14 @@ int main(int argc, char const *argv[]) {
     FILE *file;
     int team_size, team_relations, n_instructions, age, src, dest;
     char instruction[20], command;
+    clock_t start_time, end_time;
 
     if(argc < 2) {
         printf("Favor inserir o arquivo de entrada.\n");
         exit(0);
     }
+
+    start_time = clock();
     file = fopen(argv[1], "r");
     fscanf(file, "%d %d %d\n", &team_size, &team_relations, &n_instructions);
     make_empty_team(&t, team_size);
@@ -49,8 +53,6 @@ int main(int argc, char const *argv[]) {
                 dest = atoi(strtok(NULL, " "));
                 if(swap(&t, src, dest))
                     printf("S T\n");
-                else if(swap(&t, dest, src))
-                    printf("S T\n");
                 else
                     printf("S N\n");
                 break;
@@ -58,5 +60,7 @@ int main(int argc, char const *argv[]) {
     }
     fclose(file);
     free_team(&t);
+    end_time = clock();
+    printf("%f\n", (end_time - start_time) * 1000.0 / CLOCKS_PER_SEC);
     return 0;
 }

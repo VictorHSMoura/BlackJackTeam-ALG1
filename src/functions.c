@@ -71,8 +71,9 @@ int dfs_cycle(team *t, int *visited, int node) {
     while (p != NULL) {
         if(visited[p->item] == GRAY)
             return 1;
-        else if(dfs_cycle(t, visited, p->item))
-            return 1;
+        else if(visited[p->item] == WHITE)
+            if(dfs_cycle(t, visited, p->item))
+                return 1;
         p = p->next;
     }
     visited[node] = BLACK;
