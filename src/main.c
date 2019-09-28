@@ -22,45 +22,48 @@ int main(int argc, char const *argv[]) {
     file = fopen(argv[1], "r");
     fscanf(file, "%d %d %d\n", &team_size, &team_relations, &n_instructions);
     make_empty_team(&t, team_size);
-    for(int i = 0; i < team_size; i++) {
-        fscanf(file, "%d", &age);
-        set_age(&t, i, age);
-    }
-    for(int i = 0; i < team_relations; i++) {
-        fscanf(file, "%d %d\n", &src, &dest);
-        insert_edge(&t, src, dest);
-    }
-    for(int i = 0; i < n_instructions; i++) {
-        fgets(instruction, 20, file);
-        command = instruction[0];
-        strtok(instruction, " ");
-        switch (command) {
-            case 'C':
-                src = atoi(strtok(NULL, " "));
-                dest = commander(&t, src-1);
-                if(dest == -1)
-                    printf("C *\n");
-                else
-                    printf("C %d\n", dest);
-                break;
-            case 'M':
-                printf("M ");
-                l = meeting(&t);
-                print_list(&l);
-                break;
-            case 'S':
-                src = atoi(strtok(NULL, " "));
-                dest = atoi(strtok(NULL, " "));
-                if(swap(&t, src, dest))
-                    printf("S T\n");
-                else
-                    printf("S N\n");
-                break;
+    if(team_size > 0) {
+        for(int i = 0; i < team_size; i++) {
+            fscanf(file, "%d", &age);
+            set_age(&t, i, age);
+        }
+        for(int i = 0; i < team_relations; i++) {
+            fscanf(file, "%d %d\n", &src, &dest);
+            insert_edge(&t, src, dest);
+        }
+        for(int i = 0; i < n_instructions; i++) {
+            fgets(instruction, 20, file);
+            command = instruction[0];
+            strtok(instruction, " ");
+            switch (command) {
+                case 'C':
+                    src = atoi(strtok(NULL, " "));
+                    dest = commander(&t, src-1);
+                    if(dest == -1)
+                        printf("C *\n");
+                    else
+                        printf("C %d\n", dest);
+                    break;
+                case 'M':
+                    printf("M ");
+                    l = meeting(&t);
+                    print_list(&l);
+                    break;
+                case 'S':
+                    src = atoi(strtok(NULL, " "));
+                    dest = atoi(strtok(NULL, " "));
+                    if(swap(&t, src, dest))
+                        printf("S T\n");
+                    else
+                        printf("S N\n");
+                    break;
+            }
         }
     }
     fclose(file);
     free_team(&t);
     end_time = clock();
-    printf("%f\n", (end_time - start_time) * 1000.0 / CLOCKS_PER_SEC);
+    if (argc > 2 && strcmp(argv[2], "time") == 0)
+        printf("%f\n", (end_time - start_time) * 1000.0 / CLOCKS_PER_SEC);
     return 0;
 }

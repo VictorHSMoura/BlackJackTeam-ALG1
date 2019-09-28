@@ -16,7 +16,7 @@ list meeting(team *t) {
 }
 
 void topological_order(team *t, int *visited, int node, list *l) {
-    cell *p = t->adjacency[node].start->next;
+    cell *p = get_first_item(&t->adjacency[node]);
     visited[node] = GRAY;
     
     while(p != NULL) {
@@ -36,13 +36,16 @@ int swap(team *t, int src, int dest) {
     if (edge == NULL) { 
         int aux;
         aux = src; src = dest; dest = aux;
+        //check if the edge exists from the destiny to the source
         edge = find(&t->adjacency[src], dest);
     }
     if (edge != NULL) {
+        //revert edge direction
         remove_by_pointer(&t->adjacency[src], edge);
         add_item_end(&t->adjacency[dest], src);
 
         if (verify_cycle(t)) {
+            //unrevert edge direction
             remove_item_end(&t->adjacency[dest]);
             add_item_by_pointer(&t->adjacency[src], edge, dest);
             return 0;
@@ -65,15 +68,18 @@ int verify_cycle(team *t) {
 }
 
 int dfs_cycle(team *t, int *visited, int node) {
-    cell *p = t->adjacency[node].start->next;
+    cell *p = get_first_item(&t->adjacency[node]);
     visited[node] = GRAY;
 
     while (p != NULL) {
+        //if a gray node is discovered, the graph has a cycle
         if(visited[p->item] == GRAY)
             return 1;
-        else if(visited[p->item] == WHITE)
+        else if(visited[p->item] == WHITE) {
+            //if a DFS returns 1 at any time, this indicate that the graph has a cycle
             if(dfs_cycle(t, visited, p->item))
                 return 1;
+        }
         p = p->next;
     }
     visited[node] = BLACK;
@@ -86,7 +92,7 @@ team invert_edges(team *t) {
 
     for(int i = 0; i < t->size; i++) {
         list edges = t->adjacency[i];
-        for (cell *p = edges.start->next; p != NULL; p = p->next) {
+        for (cell *p = get_first_item(&edges); p != NULL; p = p->next) {
             insert_edge(&inverted_team, p->item + OFFSET, i + OFFSET);
         }
         set_age(&inverted_team, i, t->ages[i]);
@@ -106,10 +112,11 @@ int commander(team *t, int node) {
 
 //returns infinity if it doesn't have a commander
 int get_youngest(team *t, int node, int *visited, int youngest, int original) {
-    cell *p = t->adjacency[node].start->next;
+    cell *p = get_first_item(&t->adjacency[node]);
     int new_youngest;
     visited[node] = GRAY;
     
+    //if the node isn't the original, compare its age to the actual youngest
     if(!original)
         youngest = t->ages[node] < youngest ? t->ages[node] : youngest;
     else

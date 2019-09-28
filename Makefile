@@ -32,24 +32,3 @@ clean_src:
 
 clean_tst:
 	@rm $(TSTDIR)/*.o
-
-
-# tests: check_check_main.o check_list.o check_team.o list.o team.o
-# 	$(CC) check_check_main.o check_list.o check_team.o list.o team.o -o test $(FLAGS)
-# 	rm *.o
-# 	./test
-
-# check_team.o: $(TSTDIR)/check_team.c
-# 	$(CC) -c $(TSTDIR)/check_team.c
-
-# check_check_main.o: $(TSTDIR)/check_check_main.c
-# 	$(CC) -c $(TSTDIR)/check_check_main.c
-
-# check_list.o: $(TSTDIR)/check_list.c
-# 	$(CC) -c $(TSTDIR)/check_list.c
-
-# list.o: $(SRCDIR)/list.c
-# 	$(CC) -c $(SRCDIR)/list.c
-
-# team.o: $(SRCDIR)/team.c
-# 	$(CC) -c $(SRCDIR)/team.c

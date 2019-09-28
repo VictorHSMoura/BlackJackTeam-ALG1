@@ -86,8 +86,12 @@ void remove_by_pointer(list *l, cell *item_before){
     }
 }
 
+cell *get_first_item(list *l) {
+    return l->start->next;
+}
+
 void print_list(list *l) {
-    cell *p = l->start->next;
+    cell *p = get_first_item(l);
 
     while (p != NULL) {
         printf("%d ", p->item);

@@ -21,6 +21,7 @@ cell *find(list *l, int item);
 int remove_item_start(list *l);
 int remove_item_end(list *l);
 void remove_by_pointer(list *l, cell *item_before);
+cell *get_first_item(list *l);
 void print_list(list *l);
 void free_list(list *l);
 
